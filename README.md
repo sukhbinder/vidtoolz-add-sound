@@ -24,6 +24,23 @@ vidtoolz install vidtoolz-add-sound
 
 type ``vid addsound --help`` to get help
 
+```bash
+usage: vid addsound [-h] [-s START_TIME] [-o OUTPUT_PATH] video audio
+
+Add sound to a video
+
+positional arguments:
+  video                 Video file to which sound has to be added.
+  audio                 Sound file to add
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -s START_TIME, --start-time START_TIME
+                        Time in seconds where audio has to be added
+  -o OUTPUT_PATH, --output-path OUTPUT_PATH
+                        Sound file to add
+```
+
 
 
 ## Development
