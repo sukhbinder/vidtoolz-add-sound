@@ -1,5 +1,6 @@
 from moviepy import VideoFileClip, AudioFileClip, CompositeAudioClip
 
+
 def add_audio_to_video(video_path, audio_path, start_time):
     # Load the video and audio clips
     video = VideoFileClip(video_path)
@@ -26,9 +27,9 @@ def write_clip(video, output_path):
     # Write the output file
     video.write_videofile(
         output_path,
-        codec='libx264',
-        temp_audiofile='temp_audio.m4a',
+        codec="libx264",
+        temp_audiofile="temp_audio.m4a",
         remove_temp=True,
-        audio_codec="aac"
+        audio_codec="aac",
     )
     video.close()
