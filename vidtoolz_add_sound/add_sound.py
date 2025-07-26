@@ -1,4 +1,4 @@
-from moviepy import VideoFileClip, AudioFileClip, CompositeAudioClip
+from moviepy import VideoFileClip, AudioFileClip, CompositeAudioClip, afx
 
 
 def add_audio_to_video(video_path, audio_path, start_time):
@@ -14,12 +14,18 @@ def add_audio_to_video(video_path, audio_path, start_time):
     if video.audio is not None:
         audio_clips.append(video.audio)
     audio_clips.append(sound)
-
+    clipduration = video.duration
     # Create composite audio
     final_audio = CompositeAudioClip(audio_clips)
+    if final_audio.duration < clipduration:
+        naudio = final_audio.with_effects([afx.AudioLoop(duration=clipduration)])
+    else:
+        naudio = final_audio.with_duration(clipduration)  # .audio_fadeout(afadeout)
+
+    naudio = naudio.with_effects([afx.AudioFadeOut(1)])
 
     # Set the video's audio to the combined audio
-    video.audio = final_audio
+    video.audio = naudio
     return video
 
 

@@ -51,7 +51,7 @@ class ViztoolzPlugin:
         output = determine_output_path(args.video, args.output)
         clip = add_audio_to_video(args.video, args.audio, args.start_time)
         write_clip(clip, output)
-        print(f"{args.output_path} written.")
+        print(f"{output} written.")
 
     def hello(self, args):
         # this routine will be called when "vidtoolz "addsound is called."
