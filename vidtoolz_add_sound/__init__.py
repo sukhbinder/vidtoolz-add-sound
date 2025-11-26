@@ -21,6 +21,13 @@ def create_parser(subparser):
     parser.add_argument(
         "-o", "--output", default=None, type=str, help="Sound file to add"
     )
+    parser.add_argument(
+        "-v",
+        "--volume",
+        type=float,
+        default=30,
+        help="Percentage to lower the original audio (0-100), Default 30",
+    )
     return parser
 
 
@@ -49,7 +56,9 @@ class ViztoolzPlugin:
 
     def run(self, args):
         output = determine_output_path(args.video, args.output)
-        clip = add_audio_to_video(args.video, args.audio, args.start_time)
+        clip = add_audio_to_video(
+            args.video, args.audio, args.start_time, original_audio_volume=args.volume
+        )
         write_clip(clip, output)
         print(f"{output} written.")
 
