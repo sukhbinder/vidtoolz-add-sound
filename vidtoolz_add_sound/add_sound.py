@@ -1,7 +1,7 @@
-from moviepy import VideoFileClip, AudioFileClip, CompositeAudioClip, afx
+from moviepy import AudioFileClip, CompositeAudioClip, VideoFileClip, afx
 
 
-def add_audio_to_video(video_path, audio_path, start_time):
+def add_audio_to_video(video_path, audio_path, start_time, original_audio_volume=100):
     # Load the video and audio clips
     video = VideoFileClip(video_path)
     sound = AudioFileClip(audio_path)
@@ -12,7 +12,11 @@ def add_audio_to_video(video_path, audio_path, start_time):
     # Prepare audio clips to combine
     audio_clips = []
     if video.audio is not None:
-        audio_clips.append(video.audio)
+        # Adjust original audio volume
+        original_audio = video.audio.with_effects(
+            [afx.MultiplyVolume(original_audio_volume / 100.0)]
+        )
+        audio_clips.append(original_audio)
     audio_clips.append(sound)
     clipduration = video.duration
     # Create composite audio
