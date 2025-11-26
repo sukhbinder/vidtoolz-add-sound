@@ -14,10 +14,14 @@ def test_create_parser():
 
     assert parser is not None
 
-    result = parser.parse_args(["test_video.mp4", "audio.mp3", "-s", "5"])
+    result = parser.parse_args(
+        ["test_video.mp4", "audio.mp3", "-s", "5", "-v", "50", "--no-loop"]
+    )
     assert result.video == "test_video.mp4"
     assert result.audio == "audio.mp3"
     assert result.start_time == 5
+    assert result.volume == 50
+    assert result.no_loop is True
 
 
 def test_plugin(capsys):
@@ -65,6 +69,62 @@ def test_add_audio_to_video(test_files):
     assert (
         audio_start_time == 0
     ), f"Expected audio start time {start_time}, but got {audio_start_time}"
+
+    # Clean up the output video
+    output_video.close()
+    cleanup_test_files()
+
+
+def test_add_audio_to_video_no_loop(test_files):
+    # Define the start time for the audio
+    TEST_VIDEO_PATH, TEST_AUDIO_PATH = test_files
+    start_time = 1
+
+    # Call the function to be tested
+    clip = add_audio_to_video(
+        TEST_VIDEO_PATH,
+        TEST_AUDIO_PATH,
+        start_time,
+        original_audio_volume=0,
+        loop_audio=False,
+    )
+    write_clip(clip, TEST_OUTPUT_PATH)
+    # Verify the output file exists
+    assert os.path.exists(TEST_OUTPUT_PATH)
+
+    # Load the output video to verify the audio
+    output_video = VideoFileClip(TEST_OUTPUT_PATH)
+    assert output_video.audio is not None
+
+    # check that the audio is not looped
+    # We can't simply check the duration, as moviepy will pad the audio to match the video duration.
+    # Instead, we check if the audio is silent after the original audio clip's duration.
+    # A fadeout is applied, so it won't be perfectly silent, and there can be artifacts.
+    audio_sample = output_video.audio.get_frame(4.5)
+    assert sum(abs(audio_sample)) < 0.001
+
+    # Clean up the output video
+    output_video.close()
+    cleanup_test_files()
+
+
+def test_add_audio_to_video_with_volume(test_files):
+    # Define the start time for the audio
+    TEST_VIDEO_PATH, TEST_AUDIO_PATH = test_files
+    start_time = 1
+    volume = 50
+
+    # Call the function to be tested
+    clip = add_audio_to_video(
+        TEST_VIDEO_PATH, TEST_AUDIO_PATH, start_time, original_audio_volume=volume
+    )
+    write_clip(clip, TEST_OUTPUT_PATH)
+    # Verify the output file exists
+    assert os.path.exists(TEST_OUTPUT_PATH)
+
+    # Load the output video to verify the audio
+    output_video = VideoFileClip(TEST_OUTPUT_PATH)
+    assert output_video.audio is not None
 
     # Clean up the output video
     output_video.close()
