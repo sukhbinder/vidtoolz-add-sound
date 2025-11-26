@@ -25,7 +25,8 @@ vidtoolz install vidtoolz-add-sound
 type ``vid addsound --help`` to get help
 
 ```bash
-usage: vid addsound [-h] [-s START_TIME] [-o OUTPUT] [-v VOLUME] video audio
+usage: vid addsound [-h] [-s START_TIME] [-o OUTPUT] [-v VOLUME] [--no-loop]
+                    video audio
 
 Add sound to a video
 
@@ -42,6 +43,8 @@ options:
   -v VOLUME, --volume VOLUME
                         Percentage to lower the original audio (0-100),
                         Default 30
+  --no-loop             If set, the sound will not be looped to match video
+                        duration.
 ```
 
 
