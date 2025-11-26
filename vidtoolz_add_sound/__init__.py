@@ -15,8 +15,8 @@ def create_parser(subparser):
         "-s",
         "--start-time",
         type=int,
-        default=3,
-        help="Time in seconds where audio has to be added",
+        default=0,
+        help="Time in seconds where audio has to be added. Default: %(default)s",
     )
     parser.add_argument(
         "-o", "--output", default=None, type=str, help="Sound file to add"
@@ -25,13 +25,13 @@ def create_parser(subparser):
         "-v",
         "--volume",
         type=float,
-        default=30,
-        help="Percentage to lower the original audio (0-100), Default 30",
+        default=50,
+        help="Percentage to lower the original audio (0-100), Default: %(default)s",
     )
     parser.add_argument(
         "--no-loop",
         action="store_true",
-        help="If set, the sound will not be looped to match video duration.",
+        help="If set, the sound will not be looped to match video duration. Default: %(default)s",
     )
     return parser
 
