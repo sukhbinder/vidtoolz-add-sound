@@ -1,4 +1,35 @@
+import subprocess
+
 from moviepy import AudioFileClip, CompositeAudioClip, VideoFileClip, afx
+
+
+def add_audio_at_time_ffmpeg(input_video, input_audio, start_time, output_file):
+    """
+    Adds input_audio to input_video starting at start_time (in seconds),
+    mixing it with the video's existing audio using ffmpeg.
+    """
+
+    delay_ms = int(start_time * 1000)
+
+    ffmpeg_cmd = [
+        "ffmpeg",
+        "-i",
+        input_video,
+        "-i",
+        input_audio,
+        "-filter_complex",
+        f"[1:a]adelay={delay_ms}|{delay_ms}[aud];[0:a][aud]amix=inputs=2[mix]",
+        "-map",
+        "0:v",
+        "-map",
+        "[mix]",
+        "-c:v",
+        "copy",
+        output_file,
+    ]
+
+    iret = subprocess.run(ffmpeg_cmd, check=True)
+    return iret
 
 
 def add_audio_to_video(

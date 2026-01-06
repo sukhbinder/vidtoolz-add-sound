@@ -1,7 +1,12 @@
-import vidtoolz
 import os
 
-from vidtoolz_add_sound.add_sound import add_audio_to_video, write_clip
+import vidtoolz
+
+from vidtoolz_add_sound.add_sound import (
+    add_audio_at_time_ffmpeg,
+    add_audio_to_video,
+    write_clip,
+)
 
 
 def create_parser(subparser):
@@ -33,6 +38,14 @@ def create_parser(subparser):
         action="store_true",
         help="If set, the sound will not be looped to match video duration. Default: %(default)s",
     )
+
+    parser.add_argument(
+        "-ffmpeg",
+        "--use-ffmpeg",
+        action="store_true",
+        help="If set, the sound will be added by ffmpeg. Faster than moviepy. Default: %(default)s",
+    )
+
     return parser
 
 
@@ -61,14 +74,18 @@ class ViztoolzPlugin:
 
     def run(self, args):
         output = determine_output_path(args.video, args.output)
-        clip = add_audio_to_video(
-            args.video,
-            args.audio,
-            args.start_time,
-            original_audio_volume=args.volume,
-            loop_audio=not args.no_loop,
-        )
-        write_clip(clip, output)
+
+        if not args.use_ffmpeg:
+            clip = add_audio_to_video(
+                args.video,
+                args.audio,
+                args.start_time,
+                original_audio_volume=args.volume,
+                loop_audio=not args.no_loop,
+            )
+            write_clip(clip, output)
+        else:
+            add_audio_at_time_ffmpeg(args.video, args.audio, args.start_time, output)
         print(f"{output} written.")
 
     def hello(self, args):
