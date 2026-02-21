@@ -1,11 +1,19 @@
-import pytest
-import vidtoolz_add_sound as w
-from moviepy import VideoFileClip, AudioFileClip
 import os
+from argparse import ArgumentParser
+from pathlib import Path
+
+import pytest
+from moviepy import VideoFileClip
+
+import vidtoolz_add_sound as w
 
 # Import the function to be tested
 from vidtoolz_add_sound.add_sound import add_audio_to_video, write_clip
-from argparse import ArgumentParser
+
+# Define paths for test files
+HERE = Path(__file__).parent
+TEST_OUTPUT_PATH = HERE / "output_test_video.mp4"
+IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
 
 
 def test_create_parser():
@@ -30,23 +38,50 @@ def test_plugin(capsys):
     assert "Hello! This is an example ``vidtoolz`` plugin." in captured.out
 
 
-# Define paths for test files
-HERE = os.path.dirname(__file__)
-TEST_OUTPUT_PATH = os.path.join(HERE, "output_test_video.mp4")
+@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Test doesn't work in Github Actions.")
+def test_realcase_addsound(tmpdir):
+    outfile = Path(tmpdir) / "output.mp4"
+    testdata = HERE / "test_data"
+    video = testdata / "test_video.mp4"
+    audio = testdata / "test_audio.mp3"
+
+    subparser = ArgumentParser().add_subparsers()
+    parser = w.create_parser(subparser)
+
+    argv = [str(video), str(audio), "-o", str(outfile)]
+    args = parser.parse_args(argv)
+    w.addsound_plugin.run(args)
+    assert outfile.exists()
+
+
+@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Test doesn't work in Github Actions.")
+def test_realcase_addsound_ffmpeg(tmpdir):
+    outfile = Path(tmpdir) / "output_ffmpeg.mp4"
+    testdata = HERE / "test_data"
+    video = testdata / "test_video.mp4"
+    audio = testdata / "test_audio.mp3"
+
+    subparser = ArgumentParser().add_subparsers()
+    parser = w.create_parser(subparser)
+
+    argv = [str(video), str(audio), "-o", str(outfile), "-ffmpeg"]
+    args = parser.parse_args(argv)
+    w.addsound_plugin.run(args)
+    assert outfile.exists()
 
 
 @pytest.fixture(scope="module")
 def test_files():
-    TEST_VIDEO_PATH = os.path.join(HERE, "test_video.mp4")
-    TEST_AUDIO_PATH = os.path.join(HERE, "test_audio.mp3")
-    return TEST_VIDEO_PATH, TEST_AUDIO_PATH
+    testdata = HERE / "test_data"
+    TEST_VIDEO_PATH = testdata / "test_video.mp4"
+    TEST_AUDIO_PATH = testdata / "test_audio.mp3"
+    return str(TEST_VIDEO_PATH), str(TEST_AUDIO_PATH)
 
 
 # Clean up test files
 def cleanup_test_files():
-    for file in [TEST_OUTPUT_PATH]:
-        if os.path.exists(file):
-            os.remove(file)
+    if TEST_OUTPUT_PATH.exists():
+        TEST_OUTPUT_PATH.unlink()
 
 
 def test_add_audio_to_video(test_files):
