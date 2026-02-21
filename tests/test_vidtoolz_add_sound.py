@@ -1,12 +1,14 @@
-import pytest
-import vidtoolz_add_sound as w
-from moviepy import VideoFileClip, AudioFileClip
 import os
+from argparse import ArgumentParser
 from pathlib import Path
+
+import pytest
+from moviepy import VideoFileClip
+
+import vidtoolz_add_sound as w
 
 # Import the function to be tested
 from vidtoolz_add_sound.add_sound import add_audio_to_video, write_clip
-from argparse import ArgumentParser
 
 # Define paths for test files
 HERE = Path(__file__).parent
