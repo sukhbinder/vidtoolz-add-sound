@@ -24,6 +24,13 @@ def create_parser(subparser):
         help="Time in seconds where audio has to be added. Default: %(default)s",
     )
     parser.add_argument(
+        "-ast",
+        "--audio-start-time",
+        type=int,
+        default=0,
+        help="Start time in seconds for the audio file. Default: %(default)s",
+    )
+    parser.add_argument(
         "-o", "--output", default=None, type=str, help="Sound file to add"
     )
     parser.add_argument(
@@ -82,6 +89,7 @@ class ViztoolzPlugin:
                 args.start_time,
                 original_audio_volume=args.volume,
                 loop_audio=not args.no_loop,
+                audio_start_time=args.audio_start_time,
             )
             write_clip(clip, output)
         else:
