@@ -33,10 +33,15 @@ def add_audio_at_time_ffmpeg(input_video, input_audio, start_time, output_file):
 
 
 def add_audio_to_video(
-    video_path, audio_path, start_time, original_audio_volume=100, loop_audio=True
+    video_path,
+    audio_path,
+    start_time,
+    original_audio_volume=100,
+    loop_audio=True,
+    audio_start_time=0,
 ):
     video = VideoFileClip(video_path)
-    sound = AudioFileClip(audio_path)
+    sound = AudioFileClip(audio_path).subclipped(audio_start_time)
     clipduration = video.duration
 
     if loop_audio:

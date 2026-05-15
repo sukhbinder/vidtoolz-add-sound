@@ -1,0 +1,78 @@
+Add Sound - Add sound to a video
+
+type ``vid addsound --help`` to get help
+
+```bash
+usage: vid addsound [-h] [-s START_TIME] [-o OUTPUT] [-v VOLUME] [--no-loop]
+                    video audio
+
+Add sound to a video
+
+positional arguments:
+  video                 Video file to which sound has to be added.
+  audio                 Sound file to add
+
+options:
+  -h, --help            show this help message and exit
+  -s START_TIME, --start-time START_TIME
+                        Time in seconds where audio has to be added
+  -o OUTPUT, --output OUTPUT
+                        Sound file to add
+  -v VOLUME, --volume VOLUME
+                        Percentage to lower the original audio (0-100),
+                        Default 30
+  --no-loop             If set, the sound will not be looped to match video
+                        duration.
+```
+
+CLI Options:
+Add sound to a video
+
+Usage:
+  vid add-sound [options] input_file
+
+Options:
+  video: Video file to which sound has to be added.
+  audio: Sound file to add
+  -s: Time in seconds where audio has to be added. Default: %(default)s
+  -o: Sound file to add
+  -v: Percentage to lower the original audio (0-100), Default: %(default)s
+  --no-loop: If set, the sound will not be looped to match video duration. Default: %(default)s
+  -ffmpeg: If set, the sound will be added by ffmpeg. Faster than moviepy. Default: %(default)s
+
+
+Examples:
+  1. vid addsound --help`` to get help
+
+```bash
+usage: vid addsound [-h] [-s START_TIME] [-o OUTPUT] [-v VOLUME] [--no-loop]
+                    video audio
+
+Add sound to a video
+
+positional arguments:
+  video                 Video file to which sound has to be added.
+  audio                 Sound file to add
+
+options:
+  -h, --help            show this help message and exit
+  -s START_TIME, --start-time START_TIME
+                        Time in seconds where audio has to be added
+  -o OUTPUT, --output OUTPUT
+                        Sound file to add
+  -v VOLUME, --volume VOLUME
+                        Percentage to lower the original audio (0-100),
+                        Default 30
+  --no-loop             If set, the sound will not be looped to match video
+                        duration.
+```
+
+
+Examples:
+  1. vid addsound --help to get help
+  2. vid addsound [-h] [-s START_TIME] [-o OUTPUT] [-v VOLUME] [--no-loop]
+
+
+Examples:
+  1. vid add-sound input.mp4 --audio-file music.mp3
+  2. vid add-sound input.mp4 --volume 1.5

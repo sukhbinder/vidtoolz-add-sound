@@ -30,6 +30,7 @@ def test_create_parser():
     assert result.start_time == 5
     assert result.volume == 50
     assert result.no_loop is True
+    assert result.audio_start_time == 0
 
 
 def test_plugin(capsys):
@@ -152,6 +153,34 @@ def test_add_audio_to_video_with_volume(test_files):
     # Call the function to be tested
     clip = add_audio_to_video(
         TEST_VIDEO_PATH, TEST_AUDIO_PATH, start_time, original_audio_volume=volume
+    )
+    write_clip(clip, TEST_OUTPUT_PATH)
+    # Verify the output file exists
+    assert os.path.exists(TEST_OUTPUT_PATH)
+
+    # Load the output video to verify the audio
+    output_video = VideoFileClip(TEST_OUTPUT_PATH)
+    assert output_video.audio is not None
+
+    # Clean up the output video
+    output_video.close()
+    cleanup_test_files()
+
+
+def test_add_audio_to_video_with_volume_audio_start(test_files):
+    # Define the start time for the audio
+    TEST_VIDEO_PATH, TEST_AUDIO_PATH = test_files
+    start_time = 1
+    volume = 50
+    audio_start_time = 2
+
+    # Call the function to be tested
+    clip = add_audio_to_video(
+        TEST_VIDEO_PATH,
+        TEST_AUDIO_PATH,
+        start_time,
+        original_audio_volume=volume,
+        audio_start_time=audio_start_time,
     )
     write_clip(clip, TEST_OUTPUT_PATH)
     # Verify the output file exists
