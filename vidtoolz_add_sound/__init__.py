@@ -19,14 +19,14 @@ def create_parser(subparser):
     parser.add_argument(
         "-s",
         "--start-time",
-        type=int,
+        type=float,
         default=0,
         help="Time in seconds where audio has to be added. Default: %(default)s",
     )
     parser.add_argument(
         "-ast",
         "--audio-start-time",
-        type=int,
+        type=float,
         default=0,
         help="Start time in seconds for the audio file. Default: %(default)s",
     )
